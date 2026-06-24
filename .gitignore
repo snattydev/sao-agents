@@ -1,0 +1,11 @@
+# Heavy / generated
+*.tar.gz
+*.db
+*.db-shm
+*.db-wal
+*.json
+profiles/liberated/
+node_modules/
+.env
+__pycache__/
+*.pyc
