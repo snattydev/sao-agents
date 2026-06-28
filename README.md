@@ -1,100 +1,100 @@
 # SAO Agents 🏹⚔️🌸🎓
 
+[English](README.md) / [Español](README_ES.md)
+
 ![Status](https://img.shields.io/badge/status-active-7ED3C1?style=flat-square)
 ![Hermes](https://img.shields.io/badge/platform-Hermes%20Profiles-31748f?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-ebbcba?style=flat-square)
 
-> Un ecosistema de **agentes de IA con personalidad**, inspirado en _Sword Art Online_.  
-> Cada agente es un perfil nativo de [Hermes Agent](https://hermes-agent.nousresearch.com) con su propio rol, personalidad y herramientas.
->
-> ⚠️ **Nota:** Esta es una configuración personal. El roster refleja mis necesidades particulares. Usalo como inspiración para armar el tuyo.
+> An ecosystem of **AI agents with personality**, inspired by _Sword Art Online_.  
+> Each agent is a native [Hermes Agent](https://hermes-agent.nousresearch.com) profile with its own role, personality, and tools.
 
 ---
 
-## 📋 Agentes
+## 📋 Agents
 
-| # | Agente | Rol | Modelo (daily) | Heavy | Toolsets | Estado |
-|---|--------|-----|:--------------:|:-----:|----------|--------|
-| 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash (GO) | — | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Activo |
-| ⚔️ | **Kirito** | Engineering | deepseek-v4-flash (GO) | qwen3.7-plus | terminal, file, web, search, delegation | ⚡ Activo |
-| 🌸 | **Asuna** | Organization | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser | ⚡ Activo |
-| 🎓 | **Eugeo** | Study (MEXT) | deepseek-v4-flash-free (ZEN) | ds-v4-flash (GO) | file, search, web, browser, vision | ⚡ Activo |
-| 💪 | **Agil** | Fitness & Health | — | — | — | ⚪ Apagado |
-| 🐉 | **Silica** | Finance & Data | — | — | — | ⚪ Apagado |
-| ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
-| 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | — | file, search, web | 💤 Reposicionado |
-| 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
-| 🔧 | **Lisbeth** | Tooling & DevOps | deepseek-v4-flash | — | terminal, file, search, web | 💤 Reposicionado |
-| 💻 | **Yui** | Review & Support | kimi-k2.6 | — | file(ro), search, web, vision | 💤 Reposicionado |
-| 🎤 | **Yuna** | Music | deepseek-v4-flash | — | file, search, web, tts, spotify, vision | 💤 Reposicionado |
+| # | Agent | Role | Model (daily) | Heavy | Toolsets | Status |
+|---|-------|------|:--------------:|:-----:|----------|--------|
+| 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash (GO) | — | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Active |
+| ⚔️ | **Kirito** | Engineering | deepseek-v4-flash (GO) | qwen3.7-plus | terminal, file, web, search, delegation | ⚡ Active |
+| 🌸 | **Asuna** | Organization | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser | ⚡ Active |
+| 🎓 | **Eugeo** | Study (MEXT) | deepseek-v4-flash-free (ZEN) | ds-v4-flash (GO) | file, search, web, browser, vision | ⚡ Active |
+| 💪 | **Agil** | Fitness & Health | — | — | — | ⚪ Off |
+| 🐉 | **Silica** | Finance & Data | — | — | — | ⚪ Off |
+| ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | — | file, search, web, vision | 💤 Repurposed |
+| 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | — | file, search, web | 💤 Repurposed |
+| 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | — | file, search, web, vision | 💤 Repurposed |
+| 🔧 | **Lisbeth** | Tooling & DevOps | deepseek-v4-flash | — | terminal, file, search, web | 💤 Repurposed |
+| 💻 | **Yui** | Review & Support | kimi-k2.6 | — | file(ro), search, web, vision | 💤 Repurposed |
+| 🎤 | **Yuna** | Music | deepseek-v4-flash | — | file, search, web, tts, spotify, vision | 💤 Repurposed |
 
 ---
 
-## 🚀 Instalación
+## 🚀 Installation
 
-### Prerequisitos
+### Prerequisites
 
-- [Hermes Agent](https://hermes-agent.nousresearch.com/docs/getting-started/installation) instalado
-- Proveedor `opencode-go` configurado
+- [Hermes Agent](https://hermes-agent.nousresearch.com/docs/getting-started/installation) installed
+- `opencode-go` provider configured
 
-### Clonar y configurar un agente
+### Clone and configure an agent
 
 ```bash
-# 1. Clonar este repo
-git clone https://github.com/tu-usuario/sao-agents.git
+# 1. Clone this repo
+git clone https://github.com/your-user/sao-agents.git
 cd sao-agents
 
-# 2. Copiar el SOUL.md del agente que quieras
+# 2. Copy the SOUL.md of the agent you want
 mkdir -p ~/.hermes/profiles/kirito
 cp profiles/kirito/SOUL.md ~/.hermes/profiles/kirito/SOUL.md
 
-# 3. Configurar el perfil con el modelo correspondiente
+# 3. Configure the profile with the corresponding model
 hermes -p kirito config set model.default deepseek-v4-flash
 hermes -p kirito config set model.provider opencode-go
 
-# 4. Asignar alias para usarlo directo
+# 4. Set an alias for direct use
 hermes profile alias kirito
 
-# 5. Usarlo
-kirito chat -q "🏹 Shinon acá: decime quién sos"
+# 5. Use it
+kirito chat -q "🏹 Shinon here: tell me who you are"
 ```
 
-Ver [`SETUP.md`](./SETUP.md) para la guía completa por agente.
+See [`SETUP.md`](./SETUP.md) for the complete per-agent guide.
 
 ---
 
 ## 🏗️ Stack
 
-| Componente | Tecnología |
-|------------|-----------|
-| **Orquestador** | [Hermes Agent](https://hermes-agent.nousresearch.com) (profiles nativos) |
-| **Provider principal** | OpenCode Go ($10/mes) |
-| **Provider secundario** | OpenCode ZEN (gratis) |
-| **Modelo default** | deepseek-v4-flash (GO) / deepseek-v4-flash-free (ZEN fallback) |
-| **Modelos heavy** | qwen3.7-plus, deepseek-v4-pro, minimax-m3 |
-| **Comunicación** | `<agente> chat -q` (terminal) / `delegate_task` (subagentes ZEN) |
-| **Gateways** | Telegram, Discord, WhatsApp (según perfil) |
-| **Backups** | `hermes profile export` o copiar `~/.hermes/profiles/<name>/` |
+| Component | Technology |
+|-----------|-----------|
+| **Orchestrator** | [Hermes Agent](https://hermes-agent.nousresearch.com) (native profiles) |
+| **Primary provider** | OpenCode Go ($10/mo) |
+| **Secondary provider** | OpenCode ZEN (free) |
+| **Default model** | deepseek-v4-flash (GO) / deepseek-v4-flash-free (ZEN fallback) |
+| **Heavy models** | qwen3.7-plus, deepseek-v4-pro, minimax-m3 |
+| **Communication** | `<agent> chat -q` (terminal) / `delegate_task` (ZEN subagents) |
+| **Gateways** | Telegram, Discord, WhatsApp (per profile) |
+| **Backups** | `hermes profile export` or copy `~/.hermes/profiles/<name>/` |
 
 ---
 
-## 🔄 Comunicación entre agentes
+## 🔄 Agent communication
 
 ```bash
-# Shinon delega a Kirito
-kirito chat -q "🏹 Shinon acá: revisá este código, porfa"
+# Shinon delegates to Kirito
+kirito chat -q "🏹 Shinon here: review this code, please"
 
-# Shinon consulta a Asuna
-asuna chat -q "🏹 Shinon acá: organizame estas notas en el vault"
+# Shinon asks Asuna
+asuna chat -q "🏹 Shinon here: organize these notes in the vault"
 ```
 
-> ⚠️ Cada `chat -q` arranca sesión desde cero. Incluir **self-ID** siempre.
+> ⚠️ Each `chat -q` starts a fresh session. Always include **self-ID**.
 
 ---
 
 ## 🗺️ Roadmap
 
-Ver [`ROADMAP.md`](./ROADMAP.md) — Klein relay, VPS, división desktop/laptop.
+See [`ROADMAP.md`](./ROADMAP.md) — Klein relay, VPS, desktop/laptop split.
 
 ---
 
