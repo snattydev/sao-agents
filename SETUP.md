@@ -35,7 +35,7 @@ done
 
 # 3. Copiar SOUL.md de cada agente
 for agent in kirito asuna eugeo; do
-  cp "profiles/$agent.md" ~/.hermes/profiles/$agent/SOUL.md
+  cp "profiles/$agent/SOUL.md" ~/.hermes/profiles/$agent/SOUL.md
 done
 
 # 4. Configurar modelos según arquitectura multi-model
@@ -117,11 +117,11 @@ hermes profile use agil
 
 ### Agentes Reposicionados
 
-Alice, Argo, Leafa, Lisbeth, Yui, Yuna tienen sus SOUL.md en `profiles/` del repo. Para restaurar:
+Alice, Argo, Leafa, Lisbeth, Yui, Yuna tienen sus SOUL.md en `profiles/<agente>/` del repo. Para restaurar:
 
 ```bash
 hermes profile create alice --clone
-cp profiles/alice.md ~/.hermes/profiles/alice/SOUL.md
+cp profiles/alice/SOUL.md ~/.hermes/profiles/alice/SOUL.md
 ```
 
 ## Skills importantes
