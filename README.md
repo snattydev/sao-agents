@@ -13,20 +13,20 @@
 
 ## 📋 Agentes
 
-|| # | Agente | Rol | Modelo (daily) | Heavy | Toolsets | Estado |
-||---|--------|-----|:--------------:|:-----:|----------|--------|
-|| 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash (GO) | — | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Activo |
-|| ⚔️ | **Kirito** | Engineering | deepseek-v4-flash (GO) | qwen3.7-plus | terminal, file, web, search, delegation | ⚡ Activo |
-|| 🌸 | **Asuna** | Organization | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser | ⚡ Activo |
-|| 🎓 | **Eugeo** | Study (MEXT) | deepseek-v4-flash-free (ZEN) | ds-v4-flash (GO) | file, search, web, browser, vision | ⚡ Activo |
-|| 💪 | **Agil** | Fitness & Health | — | — | — | ⚪ Apagado |
-|| 🐉 | **Silica** | Finance & Data | — | — | — | ⚪ Apagado |
-|| ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
-|| 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | — | file, search, web | 💤 Reposicionado |
-|| 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
-|| 🔧 | **Lisbeth** | Tooling & DevOps | deepseek-v4-flash | — | terminal, file, search, web | 💤 Reposicionado |
-|| 💻 | **Yui** | Review & Support | kimi-k2.6 | — | file(ro), search, web, vision | 💤 Reposicionado |
-|| 🎤 | **Yuna** | Music | deepseek-v4-flash | — | file, search, web, tts, spotify, vision | 💤 Reposicionado |
+| # | Agente | Rol | Modelo (daily) | Heavy | Toolsets | Estado |
+|---|--------|-----|:--------------:|:-----:|----------|--------|
+| 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash (GO) | — | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Activo |
+| ⚔️ | **Kirito** | Engineering | deepseek-v4-flash (GO) | qwen3.7-plus | terminal, file, web, search, delegation | ⚡ Activo |
+| 🌸 | **Asuna** | Organization | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser | ⚡ Activo |
+| 🎓 | **Eugeo** | Study (MEXT) | deepseek-v4-flash-free (ZEN) | ds-v4-flash (GO) | file, search, web, browser, vision | ⚡ Activo |
+| 💪 | **Agil** | Fitness & Health | — | — | — | ⚪ Apagado |
+| 🐉 | **Silica** | Finance & Data | — | — | — | ⚪ Apagado |
+| ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
+| 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | — | file, search, web | 💤 Reposicionado |
+| 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
+| 🔧 | **Lisbeth** | Tooling & DevOps | deepseek-v4-flash | — | terminal, file, search, web | 💤 Reposicionado |
+| 💻 | **Yui** | Review & Support | kimi-k2.6 | — | file(ro), search, web, vision | 💤 Reposicionado |
+| 🎤 | **Yuna** | Music | deepseek-v4-flash | — | file, search, web, tts, spotify, vision | 💤 Reposicionado |
 
 ---
 
@@ -44,17 +44,18 @@
 git clone https://github.com/tu-usuario/sao-agents.git
 cd sao-agents
 
-# 2. Importar un perfil desde backup (si tenés uno)
-hermes profile import kirito.tar.gz
+# 2. Copiar el SOUL.md del agente que quieras
+mkdir -p ~/.hermes/profiles/kirito
+cp profiles/kirito/SOUL.md ~/.hermes/profiles/kirito/SOUL.md
 
-# O crear desde cero
-hermes profile create kirito --clone-from default
+# 3. Configurar el perfil con el modelo correspondiente
+hermes -p kirito config set model.default deepseek-v4-flash
+hermes -p kirito config set model.provider opencode-go
 
-# 3. Asignar alias para usarlo directo
+# 4. Asignar alias para usarlo directo
 hermes profile alias kirito
-# → Crea ~/.local/bin/kirito
 
-# 4. Usarlo
+# 5. Usarlo
 kirito chat -q "🏹 Shinon acá: decime quién sos"
 ```
 
