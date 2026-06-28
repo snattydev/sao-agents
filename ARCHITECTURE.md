@@ -24,6 +24,40 @@
    └─────────────┘  └────────────┘  └─────────────┘
 ```
 
+## Routing Multi-Model (28/Jun/2026)
+
+El ecosistema usa **2 providers nativos de Hermes** según la tarea:
+
+```
+Shinon (opencode-go / deepseek-v4-flash)
+├── 🎯 Chat diario, orquestación
+├── 🔁 Fallback → opencode-zen / deepseek-v4-flash-free
+└── 📦 delegate_task → opencode-zen (subagentes genéricos, ahorra GO)
+
+SAO Agents (vía chat -q con modelo propio)
+├── Eugeo 🌷 → opencode-zen (default) / opencode-go (cuando necesita 1M)
+├── Kirito ⚔️ → opencode-go / deepseek-v4-flash (qwen3.7-plus heavy)
+└── Asuna 🌸 → opencode-go / deepseek-v4-flash (fallback ZEN)
+```
+
+### Providers
+
+| Provider | Costo | Modelo | Contexto | Estabilidad |
+|:---------|:-----:|:-------|:--------:|:-----------:|
+| **OpenCode Go** | $10/mes | deepseek-v4-flash | 1M | Alta |
+| **OpenCode ZEN** | Gratis 🆓 | deepseek-v4-flash-free | Limitado | Media (broken pipes) |
+
+### Routing decisions
+
+| Tarea | Canal | Justificación |
+|:------|:------|:-------------|
+| Chat diario | Shinon → GO | 1M contexto, estable |
+| Subagentes simples | delegate_task → ZEN | No quema créditos GO |
+| Código pesado | Kirito → qwen3.7-plus | Mejor razonamiento que flash |
+| Estudio cotidiano | Eugeo → ZEN | Gratis, suficiente para el chat diario |
+| Estudio profundo | Eugeo → GO | 1M contexto para papers largos |
+| Organización vault | Asuna → GO | Rápido, confiable |
+
 ## Hermes Profiles
 
 Cada agente es un **profile de Hermes** (`~/.hermes/profiles/{name}/`) con:

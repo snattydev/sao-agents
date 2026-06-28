@@ -3,9 +3,23 @@
 ## Requisitos
 
 - [Hermes CLI](https://hermes-agent.nousresearch.com) instalado
-- API keys para los modelos que uses (opencode-go, kimi-k2.6, etc.)
+- API keys en `~/.hermes/.env`:
+  - `OPENCODE_GO_API_KEY` — proveedor principal (pago: ~$10/mes según uso)
+  - `OPENCODE_ZEN_API_KEY` — proveedor secundario (gratis, rate limited)
 - Tokens de bot de Telegram para cada agente (opcional)
 - Obsidian vault (opcional, para agents con vault access)
+
+## Proveedores
+
+El ecosistema usa **2 providers nativos de Hermes** más un proxy opcional:
+
+| Provider | Costo | Modelo | Contexto | Estabilidad |
+|:---------|:-----:|:-------|:--------:|:-----------:|
+| **OpenCode Go** | $10/mes aprox | deepseek-v4-flash | 1M | Alta |
+| **OpenCode ZEN** | Gratis 🆓 | deepseek-v4-flash-free | Limitado | Media (broken pipes) |
+| **FreeLLMAPI** 🔄 | Gratis 🆓 | Gemini 3.5 Flash, GPT-4.1, DS V4 Pro y +50 modelos | Variable | Según provider |
+
+FreeLLMAPI (https://freellmapi.co) es un proxy auto-hosteable que une los tiers gratis de 17 providers. Opcional — ver `personal/tecnologia/freellmapi.md` en la vault.
 
 ## Instalación Rápida
 
@@ -15,18 +29,32 @@ git clone <repo-url> ~/.hermes/sao-agents
 cd ~/.hermes/sao-agents
 
 # 2. Crear profiles para los agentes activos
-for agent in kirito asuna eugeo silica agil; do
+for agent in kirito asuna eugeo; do
   hermes profile create "$agent" --clone
 done
 
-# 3. Copiar configs y SOUL.md
-for agent in kirito asuna eugeo silica agil; do
+# 3. Copiar SOUL.md de cada agente
+for agent in kirito asuna eugeo; do
   cp "profiles/$agent.md" ~/.hermes/profiles/$agent/SOUL.md
-  # Ajustar config.yaml según necesites
-  hermes -p "$agent" config set model.default <modelo-correspondiente>
 done
 
-# 4. Verificar
+# 4. Configurar modelos según arquitectura multi-model
+# Kirito → opencode-go / deepseek-v4-flash + qwen3.7-plus heavy
+hermes -p kirito config set model.default deepseek-v4-flash
+hermes -p kirito config set model.provider opencode-go
+hermes -p kirito config set model.base_url https://opencode.ai/zen/go/v1
+
+# Asuna → opencode-go / deepseek-v4-flash
+hermes -p asuna config set model.default deepseek-v4-flash
+hermes -p asuna config set model.provider opencode-go
+hermes -p asuna config set model.base_url https://opencode.ai/zen/go/v1
+
+# Eugeo → opencode-zen / deepseek-v4-flash-free (gratis, para chat cotidiano)
+hermes -p eugeo config set model.default deepseek-v4-flash-free
+hermes -p eugeo config set model.provider opencode-zen
+hermes -p eugeo config set model.base_url https://opencode.ai/zen/v1
+
+# 5. Verificar
 hermes profile list
 ```
 
@@ -36,75 +64,94 @@ hermes profile list
 ```bash
 # Shinon usa el profile default de Hermes
 hermes config set model.default deepseek-v4-flash
-hermes config set terminal.cwd ~
+hermes config set model.provider opencode-go
+hermes config set model.base_url https://opencode.ai/zen/go/v1
+hermes config set fallback_providers '["opencode-zen"]'
+
+# Delegación → ZEN free para subagentes (ahorra GO)
+hermes config set delegation.provider opencode-zen
+hermes config set delegation.model deepseek-v4-flash-free
 ```
 
 ### Kirito (Engineering)
 ```bash
-kirito config set model.default deepseek-v4-pro
-kirito config set terminal.cwd ~/Projects
+kirito config set model.default deepseek-v4-flash
+kirito config set model.provider opencode-go
+kirito config set model.base_url https://opencode.ai/zen/go/v1
+
+# Habilita delegation para subagentes con modelo según tarea
+kirito config set agent.max_turns 90
 ```
+Requiere skill `subagent-model-routing` para elegir modelo según complejidad:
+- `delegate_task` → deepseek-v4-flash (simple)
+- `terminal(hermes chat -q --model qwen3.7-plus)` → código pesado
 
 ### Asuna (Organization)
 ```bash
 asuna config set model.default deepseek-v4-flash
-asuna config set terminal.cwd ~/Documents
+asuna config set model.provider opencode-go
+asuna config set model.base_url https://opencode.ai/zen/go/v1
+
+# Sin delegation ni terminal — solo organización
+asuna config set toolsets.enabled '[file, search, web, browser]'
 ```
 
 ### Eugeo (Study)
 ```bash
-eugeo config set model.default qwen3.6-plus
-eugeo gateway install  # para tenerlo siempre disponible
+eugeo config set model.default deepseek-v4-flash-free
+eugeo config set model.provider opencode-zen
+eugeo config set model.base_url https://opencode.ai/zen/v1
+
+# Gateway de Telegram
+eugeo gateway install
 ```
 
-### Silica (Finance)
+### Agentes Apagados
+
+Silica (finanzas) y Agil (fitness) están **apagados** desde 28/Jun/2026. Perfiles preservados en `~/.hermes/profiles/silica/` y `~/.hermes/profiles/agil/`. Reactivar con:
+
 ```bash
-silica config set model.default minimax-m2.5
+hermes profile use silica
+hermes profile use agil
 ```
 
-### Agil (Fitness)
+### Agentes Reposicionados
+
+Alice, Argo, Leafa, Lisbeth, Yui, Yuna tienen sus SOUL.md en `profiles/` del repo. Para restaurar:
+
 ```bash
-agil config set model.default deepseek-v4-flash
+hermes profile create alice --clone
+cp profiles/alice.md ~/.hermes/profiles/alice/SOUL.md
 ```
+
+## Skills importantes
+
+| Skill | Dónde está | Para qué |
+|:------|:-----------|:---------|
+| `subagent-model-routing` | `~/.hermes/skills/` | Elegir modelo según tipo de tarea (6 modelos) |
+| `sao-roster-delegation` | `~/.hermes/skills/` | Cómo delegar a cada agente del roster |
 
 ## Gateways de Telegram
 
 ```bash
 # Por agente
-kirito gateway start
-kirito gateway install   # persistente via systemd
+eugeo gateway install   # persistente via systemd
 
 # Ver estado
-kirito gateway status
+hermes -p eugeo gateway status
 ```
 
 Cada agente necesita un bot token único en su `.env`:
-
 ```bash
-echo "TELEGRAM_BOT_TOKEN=tu_token_aqui" >> ~/.hermes/profiles/kirito/.env
-```
-
-## Liberar Agentes Reposicionados
-
-Los agentes en estado 💤 tienen sus `SOUL.md` en `profiles/liberated/`. Para reactivar:
-
-```bash
-hermes profile create alice --clone
-cp profiles/liberated/alice/SOUL.md ~/.hermes/profiles/alice/
-alice config set model.default glm-5.1
+echo "TELEGRAM_BOT_TOKEN=tu_token_aqui" >> ~/.hermes/profiles/eugeo/.env
 ```
 
 ## Vault de Obsidian
-
-Para agentes con acceso al vault:
 
 ```bash
 # Asuna (RW)
 mkdir -p ~/.hermes/profiles/asuna/vault
 ln -s /ruta/a/tu/vault ~/.hermes/profiles/asuna/vault
-
-# Alice (RO)
-ln -s /ruta/a/tu/vault ~/.hermes/profiles/alice/vault
 ```
 
 ## Verificación

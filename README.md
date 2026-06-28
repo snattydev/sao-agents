@@ -13,20 +13,20 @@
 
 ## 📋 Agentes
 
-| # | Agente | Rol | Modelo | Toolsets | Estado |
-|---|--------|-----|--------|----------|--------|
-| 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Activo |
-| ⚔️ | **Kirito** | Engineering | kimi-k2.6 | terminal, file, web, search | ⚡ Activo |
-| 🌸 | **Asuna** | Organization | deepseek-v4-flash | file, search, web, browser | ⚡ Activo |
-| 🎓 | **Eugeo** | Study (MEXT) | qwen3.7-plus | file, search, web, browser | ⚡ Activo |
-| 💪 | **Agil** | Fitness & Health | deepseek-v4-flash | file, search, web, tts | ⚡ Activo |
-| 🐉 | **Silica** | Finance & Data | deepseek-v4-flash | file, search, web | ⚡ Activo |
-| ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | file, search, web, vision | 💤 Reposicionado |
-| 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | file, search, web | 💤 Reposicionado |
-| 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | file, search, web, vision | 💤 Reposicionado |
-| 🔧 | **Lisbeth** | Tooling & DevOps | deepseek-v4-flash | terminal, file, search, web | 💤 Reposicionado |
-| 💻 | **Yui** | Review & Support | kimi-k2.6 | file(ro), search, web, vision | 💤 Reposicionado |
-| 🎤 | **Yuna** | Music | deepseek-v4-flash | file, search, web, tts, spotify, vision | 💤 Reposicionado |
+|| # | Agente | Rol | Modelo (daily) | Heavy | Toolsets | Estado |
+||---|--------|-----|:--------------:|:-----:|----------|--------|
+|| 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash (GO) | — | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Activo |
+|| ⚔️ | **Kirito** | Engineering | deepseek-v4-flash (GO) | qwen3.7-plus | terminal, file, web, search, delegation | ⚡ Activo |
+|| 🌸 | **Asuna** | Organization | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser | ⚡ Activo |
+|| 🎓 | **Eugeo** | Study (MEXT) | deepseek-v4-flash-free (ZEN) | ds-v4-flash (GO) | file, search, web, browser, vision | ⚡ Activo |
+|| 💪 | **Agil** | Fitness & Health | — | — | — | ⚪ Apagado |
+|| 🐉 | **Silica** | Finance & Data | — | — | — | ⚪ Apagado |
+|| ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
+|| 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | — | file, search, web | 💤 Reposicionado |
+|| 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
+|| 🔧 | **Lisbeth** | Tooling & DevOps | deepseek-v4-flash | — | terminal, file, search, web | 💤 Reposicionado |
+|| 💻 | **Yui** | Review & Support | kimi-k2.6 | — | file(ro), search, web, vision | 💤 Reposicionado |
+|| 🎤 | **Yuna** | Music | deepseek-v4-flash | — | file, search, web, tts, spotify, vision | 💤 Reposicionado |
 
 ---
 
@@ -41,7 +41,7 @@
 
 ```bash
 # 1. Clonar este repo
-git clone https://github.com/snattydev/sao-agents.git
+git clone https://github.com/tu-usuario/sao-agents.git
 cd sao-agents
 
 # 2. Importar un perfil desde backup (si tenés uno)
@@ -67,12 +67,13 @@ Ver [`SETUP.md`](./SETUP.md) para la guía completa por agente.
 | Componente | Tecnología |
 |------------|-----------|
 | **Orquestador** | [Hermes Agent](https://hermes-agent.nousresearch.com) (profiles nativos) |
-| **Provider** | OpenCode Go |
-| **Modelo default** | deepseek-v4-flash |
-| **Modelos secundarios** | kimi-k2.6, qwen3.7-plus |
-| **Comunicación** | `<agente> chat -q "consulta"` (terminal) |
+| **Provider principal** | OpenCode Go ($10/mes) |
+| **Provider secundario** | OpenCode ZEN (gratis) |
+| **Modelo default** | deepseek-v4-flash (GO) / deepseek-v4-flash-free (ZEN fallback) |
+| **Modelos heavy** | qwen3.7-plus, deepseek-v4-pro, minimax-m3 |
+| **Comunicación** | `<agente> chat -q` (terminal) / `delegate_task` (subagentes ZEN) |
 | **Gateways** | Telegram, Discord, WhatsApp (según perfil) |
-| **Backups** | `hermes profile export` o copia directa de `~/.hermes/profiles/<name>/` |
+| **Backups** | `hermes profile export` o copiar `~/.hermes/profiles/<name>/` |
 
 ---
 

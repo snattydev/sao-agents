@@ -5,6 +5,7 @@
 *.db-wal
 *.json
 profiles/liberated/
+profiles/*.sh
 node_modules/
 .env
 __pycache__/
