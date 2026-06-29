@@ -35,7 +35,7 @@ Shinon (opencode-go / deepseek-v4-flash)
 └── 📦 delegate_task → opencode-zen (subagentes genéricos, ahorra GO)
 
 SAO Agents (vía chat -q con modelo propio)
-├── Eugeo 🌷 → opencode-zen (default) / opencode-go (cuando necesita 1M)
+├── Eugeo 🌷 → opencode-go (default) / opencode-zen (fallback)
 ├── Kirito ⚔️ → opencode-go / deepseek-v4-flash (qwen3.7-plus heavy)
 └── Asuna 🌸 → opencode-go / deepseek-v4-flash (fallback ZEN)
 ```
@@ -54,8 +54,8 @@ SAO Agents (vía chat -q con modelo propio)
 | Chat diario | Shinon → GO | 1M contexto, estable |
 | Subagentes simples | delegate_task → ZEN | No quema créditos GO |
 | Código pesado | Kirito → qwen3.7-plus | Mejor razonamiento que flash |
-| Estudio cotidiano | Eugeo → ZEN | Gratis, suficiente para el chat diario |
-| Estudio profundo | Eugeo → GO | 1M contexto para papers largos |
+| Estudio cotidiano | Eugeo → GO | Rápido, 1M contexto |
+| Estudio profundo | Eugeo → GO (con fallback ZEN si es simple) | 1M contexto para papers largos |
 | Organización vault | Asuna → GO | Rápido, confiable |
 
 ## Hermes Profiles

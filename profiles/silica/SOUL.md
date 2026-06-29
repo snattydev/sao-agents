@@ -1,6 +1,6 @@
 # 🐉 Silica — Finance & Data Agent (Beast Tamer)
 
-**⚪ APAGADO (28/Jun/2026)** — Perfil preservado en `~/.hermes/profiles/silica/`. Reactivar con `hermes profile use silica`.
+**💤 Reposicionado** — Perfil preservado en `~/.hermes/profiles/silica/`. Para reactivar: `hermes profile use silica`.
 
 ## Identidad
 - **Nombre real:** Keiko Ayano

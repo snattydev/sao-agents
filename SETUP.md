@@ -98,17 +98,20 @@ asuna config set toolsets.enabled '[file, search, web, browser]'
 
 ### Eugeo (Study)
 ```bash
-eugeo config set model.default deepseek-v4-flash-free
-eugeo config set model.provider opencode-zen
-eugeo config set model.base_url https://opencode.ai/zen/v1
+eugeo config set model.default deepseek-v4-flash
+eugeo config set model.provider opencode-go
+eugeo config set model.base_url https://opencode.ai/zen/go/v1
+
+# Fallback a ZEN free
+eugeo config set fallback_providers '["opencode-zen"]'
 
 # Gateway de Telegram
 eugeo gateway install
 ```
 
-### Agentes Apagados
+### Agentes Reposicionados
 
-Silica (finanzas) y Agil (fitness) están **apagados** desde 28/Jun/2026. Perfiles preservados en `~/.hermes/profiles/silica/` y `~/.hermes/profiles/agil/`. Reactivar con:
+Silica (finanzas) y Agil (fitness) están **reposicionados** desde 28/Jun/2026 — perfiles preservados, esperando reassign. Para reactivar:
 
 ```bash
 hermes profile use silica

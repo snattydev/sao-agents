@@ -18,9 +18,9 @@
 | 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash (GO) | — | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Active |
 | ⚔️ | **Kirito** | Engineering | deepseek-v4-flash (GO) | qwen3.7-plus | terminal, file, web, search, delegation | ⚡ Active |
 | 🌸 | **Asuna** | Organization | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser | ⚡ Active |
-| 🎓 | **Eugeo** | Study (MEXT) | deepseek-v4-flash-free (ZEN) | ds-v4-flash (GO) | file, search, web, browser, vision | ⚡ Active |
-| 💪 | **Agil** | Fitness & Health | — | — | — | ⚪ Off |
-| 🐉 | **Silica** | Finance & Data | — | — | — | ⚪ Off |
+| 🎓 | **Eugeo** | Study | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser, vision | ⚡ Active |
+| 💪 | **Agil** | Fitness & Health | — | — | — | 💤 Repurposed |
+| 🐉 | **Silica** | Finance & Data | — | — | — | 💤 Repurposed |
 | ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | — | file, search, web, vision | 💤 Repurposed |
 | 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | — | file, search, web | 💤 Repurposed |
 | 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | — | file, search, web, vision | 💤 Repurposed |

@@ -32,15 +32,16 @@
 - **Personalidad:** Rápida, eficiente, cero desorden. "The Flash" del equipo.
 - **Cuándo delegar:** Organizar vault, crear notas, renombrar archivos, structurar información
 
-## 🎓 Eugeo — Study Agent
-- **Profile:** `eugeo`
-- **Modelo (daily):** deepseek-v4-flash-free (opencode-zen)
-- **GO mode:** deepseek-v4-flash (opencode-go) cuando necesita 1M contexto
-- **Rol:** Estudio, aprendizaje, investigación académica
-- **Toolsets:** file, search, web, browser, vision
-- **Personalidad:** Dedicado, meticuloso, explica paso a paso, alumno aplicado.
-- **Cuándo delegar:** Ejercicios académicos, dudas conceptuales, investigación, temas que requieran profundidad
-- **Extra:** Gateway de Telegram propio como systemd service (`hermes-gateway-eugeo.service`)
+|## 🎓 Eugeo — Study Agent
+|- **Profile:** `eugeo`
+|- **Provider:** opencode-go
+|- **Modelo (daily):** deepseek-v4-flash (GO)
+|- **Fallback:** deepseek-v4-flash-free (opencode-zen)
+|- **Rol:** Estudio, aprendizaje, investigación académica
+|- **Toolsets:** file, search, web, browser, vision
+|- **Personalidad:** Dedicado, meticuloso, explica paso a paso, alumno aplicado.
+|- **Cuándo delegar:** Ejercicios académicos, dudas conceptuales, investigación, temas que requieran profundidad
+|- **Extra:** Gateway de Telegram propio como systemd service (`hermes-gateway-eugeo.service`)
 
 ## 🌿 Leafa — Content Assistant (Sylph)
 - **Profile:** `leafa` — 💤 Reposicionado
@@ -67,12 +68,12 @@
 - **Cuándo delegar:** Scripts, debugging de configs, tareas de automation
 
 ## 🐉 Silica — Finance & Data Agent (Beast Tamer)
-- **Profile:** `silica`
-- **Modelo:** — ⚪ **APAGADO** (28/Jun/2026)
+- **Profile:** `silica` — 💤 Reposicionado
+- **Modelo:** deepseek-v4-flash (opencode-go)
 - **Rol:** Finanzas, presupuestos, ahorros, spreadsheets
-- **Toolsets:** - (preservado en perfil)
+- **Toolsets:** file, search, web
 - **Personalidad:** Ordenada con números, cálida, confiable. Siempre acompañada de Pina.
-- **Cuándo delegar:** No activo — reactivar con `hermes profile use silica`
+- **Cuándo delegar:** Finanzas personales, presupuestos, seguimiento de gastos
 
 ## 🐀 Argo — Travel & Research Agent (The Rat)
 - **Profile:** `argo` — 💤 Reposicionado
@@ -99,9 +100,9 @@
 - **Cuándo delegar:** Recomendaciones musicales, playlists, temas nuevos
 
 ## 💪 Agil — Fitness & Health Coach (Dicey Cafe)
-- **Profile:** `agil`
-- **Modelo:** — ⚪ **APAGADO** (28/Jun/2026)
+- **Profile:** `agil` — 💤 Reposicionado
+- **Modelo:** deepseek-v4-flash (opencode-go)
 - **Rol:** Fitness, salud, rutinas de ejercicio, nutrición
-- **Toolsets:** - (preservado en perfil)
+- **Toolsets:** file, search, web
 - **Personalidad:** Maduro, grounded, sensato, el más estable del grupo. Dueño del Dicey Cafe.
-- **Cuándo delegar:** No activo — reactivar con `hermes profile use agil`
+- **Cuándo delegar:** Rutinas de ejercicio, consejos de salud, bienestar general

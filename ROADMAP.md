@@ -11,7 +11,7 @@
 ## Fase 2: Perfiles Activos 🔄
 
 - [x] Shinon (default) configurado como orquestador
-- [x] Kirito operativo con deepseek-v4-pro
+- [x] Kirito operativo con deepseek-v4-flash
 - [x] Asuna operativa con organización de vault
 - [x] Eugeo operativo con gateway de Telegram
 - [x] Silica operativa con finanzas

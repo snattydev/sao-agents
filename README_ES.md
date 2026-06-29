@@ -20,9 +20,9 @@
 | 🏹 | **Shinon** | Orchestrator (Host) | deepseek-v4-flash (GO) | — | web, browser, terminal, file, code_execution, vision, skills, memory, session_search, delegation, cronjob, todo | ⚡ Activo |
 | ⚔️ | **Kirito** | Engineering | deepseek-v4-flash (GO) | qwen3.7-plus | terminal, file, web, search, delegation | ⚡ Activo |
 | 🌸 | **Asuna** | Organization | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser | ⚡ Activo |
-| 🎓 | **Eugeo** | Study (MEXT) | deepseek-v4-flash-free (ZEN) | ds-v4-flash (GO) | file, search, web, browser, vision | ⚡ Activo |
-| 💪 | **Agil** | Fitness & Health | — | — | — | ⚪ Apagado |
-| 🐉 | **Silica** | Finance & Data | — | — | — | ⚪ Apagado |
+| 🎓 | **Eugeo** | Estudio | deepseek-v4-flash (GO) | fallback ZEN | file, search, web, browser, vision | ⚡ Activo |
+| 💪 | **Agil** | Fitness & Health | — | — | — | 💤 Reposicionado |
+| 🐉 | **Silica** | Finance & Data | — | — | — | 💤 Reposicionado |
 | ⚖️ | **Alice** | Social / Discord | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
 | 🐀 | **Argo** | Travel & Research | deepseek-v4-flash | — | file, search, web | 💤 Reposicionado |
 | 🌿 | **Leafa** | Content Assistant | deepseek-v4-flash | — | file, search, web, vision | 💤 Reposicionado |
