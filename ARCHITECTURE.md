@@ -1,150 +1,116 @@
-# SAO Agents — Arquitectura
+# SAO Agents — Architecture
 
-## Visión General
+> The architecture has evolved as I've learned. What follows is the current design thinking, with ~~strikethrough~~ marking concepts that have shifted along the way. This repo documents the journey, not a fixed destination.
 
-```
-                    ┌─────────────┐
-                    │   Telegram   │
-                    │   Gateway    │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │   Shinon    │
-                    │ (Orchestr.) │
-                    └──────┬──────┘
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-   ┌──────▼──────┐  ┌─────▼──────┐  ┌─────▼──────┐
-   │   Combate   │  │   Apoyo    │  │  Externos   │
-   │ Kirito      │  │ Yui        │  │ Argo        │
-   │ Asuna       │  │ Leafa      │  │ Yuna        │
-   │ Lisbeth     │  │ Silica     │  │ Agil        │
-   │ Eugeo       │  │ Alice      │  │             │
-   └─────────────┘  └────────────┘  └─────────────┘
-```
+---
 
-## Routing Multi-Model (28/Jun/2026)
+## Design Philosophy
 
-El ecosistema usa **2 providers nativos de Hermes** según la tarea:
+Each agent is a **profile** — an independent identity with its own personality (`SOUL.md`), tool access, and memory. Profiles are the unit of deployment: create one per agent, configure its tools, and let its personality drive the interaction.
+
+The design evolves on three axes:
+- **Isolation** — from full native access (single-user) to containerized (production)
+- **Model assignment** — from multi-model routing per agent to a simpler unified provider
+- **Roster size** — from 12 agents to a smaller active set and back as needs change
+
+---
+
+## Current Architecture
 
 ```
-Shinon (opencode-go / deepseek-v4-flash)
-├── 🎯 Chat diario, orquestación
-├── 🔁 Fallback → opencode-zen / deepseek-v4-flash-free
-└── 📦 delegate_task → opencode-zen (subagentes genéricos, ahorra GO)
-
-SAO Agents (vía chat -q con modelo propio)
-├── Eugeo 🌷 → opencode-go (default) / opencode-zen (fallback)
-├── Kirito ⚔️ → opencode-go / deepseek-v4-flash (qwen3.7-plus heavy)
-└── Asuna 🌸 → opencode-go / deepseek-v4-flash (fallback ZEN)
+┌─────────────────────────────────────────────┐
+│                 User                         │
+│        (Terminal / Telegram)                 │
+└──────────────────┬──────────────────────────┘
+                   │
+            ┌──────▼──────┐
+            │   Shinon    │
+            │ (Orchestr.) │
+            └──────┬──────┘
+                   │
+          ┌────────┼────────┐
+          │        │        │
+    ┌─────▼──┐ ┌──▼───┐ ┌──▼────┐
+    │ Asuna  │ │Eugeo │ │Kirito │
+    │(Organ.)│ │(Study)│ │(Eng.) │
+    └────────┘ └──────┘ └───────┘
 ```
 
-### Providers
+### Profiles
 
-| Provider | Costo | Modelo | Contexto | Estabilidad |
-|:---------|:-----:|:-------|:--------:|:-----------:|
-| **OpenCode Go** | $10/mes | deepseek-v4-flash | 1M | Alta |
-| **OpenCode ZEN** | Gratis 🆓 | deepseek-v4-flash-free | Limitado | Media (broken pipes) |
+Each agent is a standalone profile. Shinon (the default profile) serves as the host and orchestrator — the entry point for the user and the coordinator of the ecosystem. Other agents are independent profiles that can be interacted with directly or through delegation.
 
-### Routing decisions
+### Gateways
 
-| Tarea | Canal | Justificación |
-|:------|:------|:-------------|
-| Chat diario | Shinon → GO | 1M contexto, estable |
-| Subagentes simples | delegate_task → ZEN | No quema créditos GO |
-| Código pesado | Kirito → qwen3.7-plus | Mejor razonamiento que flash |
-| Estudio cotidiano | Eugeo → GO | Rápido, 1M contexto |
-| Estudio profundo | Eugeo → GO (con fallback ZEN si es simple) | 1M contexto para papers largos |
-| Organización vault | Asuna → GO | Rápido, confiable |
+Agents can be reached through messaging gateways. Each gateway-connected agent has its own bot identity and can hold independent conversations. Currently Telegram is the active gateway; other platforms follow the same pattern.
 
-## Hermes Profiles
+### Storage
 
-Cada agente es un **profile de Hermes** (`~/.hermes/profiles/{name}/`) con:
+Each profile has its own isolated storage for sessions, memories, and configuration. ~~Some agents were designed to run in containers with mounted vaults~~ — the container pattern represents the production ideal but isn't currently in use for daily operation.
+
+---
+
+## Architecture Evolution
+
+The architecture has gone through several phases as I've learned what works:
+
+| Phase | Model Strategy | Roster | Isolation |
+|:------|:--------------|:-------|:----------|
+| **Initial** | ~~Multi-model routing per agent (GO + ZEN + FreeLLMAPI)~~ | Full 12-agent roster | ~~Containerized~~ |
+| **Consolidation** | ~~Unified ZEN-only provider~~ | Reduced to 3-4 active | Native profiles |
+| **Current** | Unified provider, lightweight primary model with heavier fallbacks for complex tasks | Flexible — core + conceptual | Native (single-user), container architecture documented as ideal |
+
+Key shifts:
+- ~~Complex per-agent model routing was replaced by a simpler unified provider strategy~~ — reduced cognitive overhead and maintenance
+- ~~The roster was slimmed down as I learned which agents actually added value vs. which were overkill~~
+- Containerization remains the aspirational deployment model for production use, but native profiles work well for a single-user setup
+
+---
+
+## Container Vision (Production Ideal)
+
+For a production or multi-user deployment, each agent would run in its own container:
 
 ```
-~/.hermes/profiles/{name}/
-├── config.yaml      → modelo, provider, toolsets, settings
-├── .env             → API keys, bot token
-├── SOUL.md          → personalidad, instrucciones, estilo
-├── sessions/        → historial de conversaciones
-├── memories/        → memoria persistente
-└── skills/          → skills específicos del agente
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│  Agent A     │  │  Agent B     │  │  Agent C     │
+│ ┌──────────┐ │  │ ┌──────────┐ │  │ ┌──────────┐ │
+│ │ SOUL.md  │ │  │ │ SOUL.md  │ │  │ │ SOUL.md  │ │
+│ │ Config   │ │  │ │ Config   │ │  │ │ Config   │ │
+│ │ Sessions │ │  │ │ Sessions │ │  │ │ Sessions │ │
+│ │ Tools    │ │  │ │ Tools    │ │  │ │ Tools    │ │
+│ └──────────┘ │  │ └──────────┘ │  │ └──────────┘ │
+└──────────────┘  └──────────────┘  └──────────────┘
 ```
 
-Perfiles activos tienen alias CLI (`kirito chat`, `asuna setup`, etc.).
+Each container has:
+- Its own filesystem (scoped to what the agent needs)
+- Limited network access (based on role — web agents browse, finance agents don't)
+- Dedicated credentials (bot tokens, API keys)
+- Independent session and memory storage
+
+This pattern keeps agents isolated: if one is compromised or malfunctions, the others aren't affected. In my current single-user setup, this level of isolation isn't necessary — agents run directly on my workstation.
+
+---
 
 ## SOUL.md Engine
 
-Cada `SOUL.md` define:
+The `SOUL.md` file is the heart of each agent. It defines:
 
-1. **Canon personality** — rasgos del personaje SAO (Fandom wiki sourced)
-2. **Communication style** — tono, frases, patrones de habla
-3. **Role boundaries** — qué hace y qué NO hace
-4. **Relationship dynamics** — cómo interactúa con otros agentes
-5. **Vault protocol** — acceso al vault de Obsidian
+1. **Canon personality** — character traits from the SAO Fandom wiki
+2. **Communication style** — tone, dialect, catchphrases, speaking patterns
+3. **Role boundaries** — what the agent does and doesn't handle
+4. **Relationship dynamics** — how it interacts with other agents
+5. **Domain** — the area it specializes in
 
-El motor de Hermes lee `SOUL.md` al inicio de cada sesión y lo inyecta en el system prompt.
+The runtime reads `SOUL.md` at session start and uses it as the system prompt. This makes personality both portable (copy the file, get the same agent) and iterable (edit the file, change the behavior).
 
-## Comunicación
+---
 
-| Canal | Propósito | Agentes |
-|-------|-----------|---------|
-| **Telegram** | Interacción directa con el usuario | Todos (cada uno con su bot token) |
-| **Delegación** | Shinon → agente vía `delegate.sh` / delegación nativa | Shinon a todos |
-| **Cron jobs** | Tareas automáticas programadas | Shinon, Asuna |
+## Principles
 
-### Gateways de Telegram
-
-Cada agente tiene su propio bot token de Telegram, manejado como un gateway independiente:
-
-```bash
-kirito gateway start    # inicia el gateway de Kirito
-kirito gateway install  # crea un systemd service persistente
-```
-
-El sistema de token lock de Hermes previene conflictos si dos agentes usan el mismo token accidentalmente.
-
-## Tipos de Agentes
-
-### 🗡️ Agentes de Combate
-Con acceso a terminal y código. Ejecutan tareas que modifican el sistema.
-
-| Agente | Container? | Vault |
-|--------|-----------|-------|
-| Kirito | Sí (codigo RW) | CodeProjects en `/code` (RW) |
-| Asuna | Sí (container) | Vault en `/vault` (RW) |
-| Lisbeth | No (profile) | Home |
-| Eugeo | Sí (container) | `/study` (RW) |
-
-### 🛡️ Agentes de Apoyo
-Sin terminal. Acceso limitado a archivos.
-
-| Agente | Container? | Vault |
-|--------|-----------|-------|
-| Yui | No (profile) | CodeProjects en `/code` (RO) |
-| Leafa | No (profile) | Vault en `/vault` (RW) |
-| Alice | No (profile) | Vault en `/vault` (RO) |
-| Silica | No (profile) | Home |
-
-### 🌐 Agentes Externos
-Research, contenido, bienestar. Sin acceso crítico al sistema.
-
-| Agente | Container? | Vault |
-|--------|-----------|-------|
-| Argo | No (profile) | Vault en `/vault` (RW) |
-| Yuna | No (profile) | Home |
-| Agil | No (profile) | Home |
-
-## Estados de Agente
-
-- **🟢 Activo** — profile creado, configurado, en uso
-- **💤 Reposicionado** — perfil existe pero no activo; esperando reassign
-
-## Principios de Diseño
-
-1. **Personalidad canon** — basada en Fandom wiki, no Wikipedia
-2. **Tool restriction narrativa** — los toolsets reflejan el rol ficticio
-3. **Voseo argentino** — todos hablan en vos, consistente
-4. **SOUL.md como fuente única de verdad** — personalidad, instrucciones, relaciones
-5. **Container vs Profile** — híbrido según necesidad de aislamiento
+1. **Canon personality** — drawn from the SAO Fandom wiki, not Wikipedia
+2. **Tool restriction narrativa** — toolsets reflect the fictional role
+3. **Consistent voice** — all agents in this roster use Argentine voseo
+4. **SOUL.md as source of truth** — personality, instructions, relationships all live in one file
+5. **Evolution over rigidity** — the architecture has changed multiple times and will keep changing. That's by design.

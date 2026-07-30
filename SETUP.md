@@ -1,172 +1,95 @@
 # SAO Agents — Setup Guide
 
-## Requisitos
+A general guide to running a SAO-style agent. The specifics depend on your runtime and infrastructure.
 
-- [Hermes CLI](https://hermes-agent.nousresearch.com) instalado
-- API keys en `~/.hermes/.env`:
-  - `OPENCODE_GO_API_KEY` — proveedor principal (pago: ~$10/mes según uso)
-  - `OPENCODE_ZEN_API_KEY` — proveedor secundario (gratis, rate limited)
-- Tokens de bot de Telegram para cada agente (opcional)
-- Obsidian vault (opcional, para agents con vault access)
+## What You Need
 
-## Proveedores
+- An **agent runtime** that supports personality/system prompt files (like [Hermes Agent](https://hermes-agent.nousresearch.com))
+- An **LLM provider** with API access
+- (Optional) A **messaging gateway** (Telegram, Discord, etc.) if you want your agent available from chat platforms
 
-El ecosistema usa **2 providers nativos de Hermes** más un proxy opcional:
+---
 
-| Provider | Costo | Modelo | Contexto | Estabilidad |
-|:---------|:-----:|:-------|:--------:|:-----------:|
-| **OpenCode Go** | $10/mes aprox | deepseek-v4-flash | 1M | Alta |
-| **OpenCode ZEN** | Gratis 🆓 | deepseek-v4-flash-free | Limitado | Media (broken pipes) |
-| **FreeLLMAPI** 🔄 | Gratis 🆓 | Gemini 3.5 Flash, GPT-4.1, DS V4 Pro y +50 modelos | Variable | Según provider |
+## Quick Start
 
-FreeLLMAPI (https://freellmapi.co) es un proxy auto-hosteable que une los tiers gratis de 17 providers. Opcional — ver `personal/tecnologia/freellmapi.md` en la vault.
+1. **Pick a personality** — choose a `SOUL.md` from `profiles/<agent>/` in this repo
+2. **Create a profile** — most runtimes let you create named profiles, each with its own config
+3. **Inject the SOUL.md** — use the file as the system prompt or personality definition
+4. **Set up a model** — lighter agents work fine on smaller models; heavier ones benefit from stronger reasoning
+5. **Add tools** — give the agent access to what its role needs: files, web search, terminal, etc.
+6. **Test it** — start a session and see if the personality sticks
 
-## Instalación Rápida
+---
 
-```bash
-# 1. Clonar el repo
-git clone <repo-url> ~/.hermes/sao-agents
-cd ~/.hermes/sao-agents
+## Architecture Patterns
 
-# 2. Crear profiles para los agentes activos
-for agent in kirito asuna eugeo; do
-  hermes profile create "$agent" --clone
-done
+### Single-user (like my setup)
 
-# 3. Copiar SOUL.md de cada agente
-for agent in kirito asuna eugeo; do
-  cp "profiles/$agent/SOUL.md" ~/.hermes/profiles/$agent/SOUL.md
-done
+Agents run directly on your workstation with the same access level you have. Fine when you're the only user, but risky in shared environments.
 
-# 4. Configurar modelos según arquitectura multi-model
-# Kirito → opencode-go / deepseek-v4-flash + qwen3.7-plus heavy
-hermes -p kirito config set model.default deepseek-v4-flash
-hermes -p kirito config set model.provider opencode-go
-hermes -p kirito config set model.base_url https://opencode.ai/zen/go/v1
+### Containerized (recommended for production)
 
-# Asuna → opencode-go / deepseek-v4-flash
-hermes -p asuna config set model.default deepseek-v4-flash
-hermes -p asuna config set model.provider opencode-go
-hermes -p asuna config set model.base_url https://opencode.ai/zen/go/v1
+Each agent runs in its own container with scoped filesystem access, limited network, and dedicated credentials. This is the cleaner, more secure approach — especially if agents have different trust levels (e.g., one handles finance, another browses the web).
 
-# Eugeo → opencode-go / deepseek-v4-flash (con fallback ZEN)
-hermes -p eugeo config set model.default deepseek-v4-flash
-hermes -p eugeo config set model.provider opencode-go
-hermes -p eugeo config set model.base_url https://opencode.ai/zen/go/v1
-hermes -p eugeo config set fallback_providers '["opencode-zen"]'
+### Hybrid
 
-# 5. Verificar
-hermes profile list
-```
+Some agents run natively (lightweight, no isolation needed), others in containers (when they need heavy tool access or isolation). Choose based on each agent's role.
 
-## Configuración por Agente
+---
 
-### Shinon (default)
-```bash
-# Shinon usa el profile default de Hermes
-hermes config set model.default deepseek-v4-flash
-hermes config set model.provider opencode-go
-hermes config set model.base_url https://opencode.ai/zen/go/v1
-hermes config set fallback_providers '["opencode-zen"]'
+## SOUL.md — The Core
 
-# Delegación → ZEN free para subagentes (ahorra GO)
-hermes config set delegation.provider opencode-zen
-hermes config set delegation.model deepseek-v4-flash-free
-```
+Every agent in this ecosystem is defined by its `SOUL.md`. This file contains:
 
-### Kirito (Engineering)
-```bash
-kirito config set model.default deepseek-v4-flash
-kirito config set model.provider opencode-go
-kirito config set model.base_url https://opencode.ai/zen/go/v1
+| Section | What it defines |
+|---------|----------------|
+| **Identity** | Who the agent is — name, avatar, role, profile reference |
+| **Personality** | Canon traits drawn from the SAO character — how they think and react |
+| **Communication style** | Tone, dialect, catchphrases, metaphors |
+| **Domain** | What the agent handles — its area of expertise |
+| **Relationships** | How they relate to other agents in the roster |
 
-# Habilita delegation para subagentes con modelo según tarea
-kirito config set agent.max_turns 90
-```
-Requiere skill `subagent-model-routing` para elegir modelo según complejidad:
-- `delegate_task` → deepseek-v4-flash (simple)
-- `terminal(hermes chat -q --model qwen3.7-plus)` → código pesado
+The SOUL.md acts as the system prompt. Drop it in, and the agent becomes that character.
 
-### Asuna (Organization)
-```bash
-asuna config set model.default deepseek-v4-flash
-asuna config set model.provider opencode-go
-asuna config set model.base_url https://opencode.ai/zen/go/v1
+---
 
-# Sin delegation ni terminal — solo organización
-asuna config set toolsets.enabled '[file, search, web, browser]'
-```
+## Tools & Tool Restrictions
 
-### Eugeo (Study)
-```bash
-eugeo config set model.default deepseek-v4-flash
-eugeo config set model.provider opencode-go
-eugeo config set model.base_url https://opencode.ai/zen/go/v1
+Each agent's toolset should reflect its role narratively:
 
-# Fallback a ZEN free
-eugeo config set fallback_providers '["opencode-zen"]'
+- A **study agent** needs web search, document reading, maybe vision
+- An **engineering agent** needs terminal access and file read/write
+- A **social agent** might only need messaging and web search
+- A **music agent** needs search plus any audio-related tools
 
-# Gateway de Telegram
-eugeo gateway install
-```
+The principle: **tool restriction narrativa** — toolsets reflect the fictional role.
 
-### Agentes Reposicionados
+---
 
-Silica (finanzas) y Agil (fitness) están **reposicionados** desde 28/Jun/2026 — perfiles preservados, esperando reassign. Para reactivar:
+## Communication Between Agents
 
-```bash
-hermes profile use silica
-hermes profile use agil
-```
+Agents can coordinate in several ways:
 
-### Agentes Reposicionados
+- **Direct delegation** — one agent sends a task to another, passing context
+- **Shared files** — agents write to a shared location and read from it
+- **Message relay** — through a gateway, agents can message each other
 
-Alice, Argo, Leafa, Lisbeth, Yui, Yuna tienen sus SOUL.md en `profiles/<agente>/` del repo. Para restaurar:
+Each approach has trade-offs. The simplest is direct delegation with self-identification (the sending agent states who it is).
 
-```bash
-hermes profile create alice --clone
-cp profiles/alice/SOUL.md ~/.hermes/profiles/alice/SOUL.md
-```
+---
 
-## Skills importantes
+## Security Considerations
 
-| Skill | Dónde está | Para qué |
-|:------|:-----------|:---------|
-| `subagent-model-routing` | `~/.hermes/skills/` | Elegir modelo según tipo de tarea (6 modelos) |
-| `sao-roster-delegation` | `~/.hermes/skills/` | Cómo delegar a cada agente del roster |
+- **API keys and tokens** go in environment files, never in the personality files or repo
+- **Gateways** should use dedicated bot tokens per agent
+- **Container isolation** is ideal when agents have different trust levels
+- **Vault access** (if using a knowledge base) should be read-only for agents that only need to query, read-write for those that organize
 
-## Gateways de Telegram
+---
 
-```bash
-# Por agente
-eugeo gateway install   # persistente via systemd
+## Tips
 
-# Ver estado
-hermes -p eugeo gateway status
-```
-
-Cada agente necesita un bot token único en su `.env`:
-```bash
-echo "TELEGRAM_BOT_TOKEN=tu_token_aqui" >> ~/.hermes/profiles/eugeo/.env
-```
-
-## Vault de Obsidian
-
-```bash
-# Asuna (RW)
-mkdir -p ~/.hermes/profiles/asuna/vault
-ln -s /ruta/a/tu/vault ~/.hermes/profiles/asuna/vault
-```
-
-## Verificación
-
-```bash
-# Listar todos los perfiles
-hermes profile list
-
-# Probar un agente
-kirito chat -q "Decime quién soy"
-
-# Ver health del gateway
-hermes -p eugeo gateway status
-```
+- Start with fewer agents. One well-tuned agent is worth more than ten half-baked ones.
+- The personality is the differentiator. Two agents with the same model but different SOULs behave completely differently.
+- Iterate on the SOUL.md as you use the agent — you'll discover what works and what doesn't.
+- The architecture will change as you learn. That's fine. Document the evolution.
