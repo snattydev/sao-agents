@@ -2,6 +2,10 @@
 
 [English](README.md) / [Español](README_ES.md)
 
+> 🚧 **Personal Learning Project** — This repository is part of an ongoing exploration into AI agent personality and orchestration. An integrated project is currently under development and will be made public once ready.
+>
+> ©️ **Copyright Notice** — _Sword Art Online_ is the property of Reki Kawahara, A-1 Pictures, and Aniplex. This is a fan-made, non-commercial learning exercise. Not affiliated with or endorsed by the copyright holders.
+
 ![Status](https://img.shields.io/badge/status-active-7ED3C1?style=flat-square)
 ![Hermes](https://img.shields.io/badge/platform-Hermes%20Profiles-31748f?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-ebbcba?style=flat-square)

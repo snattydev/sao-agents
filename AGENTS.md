@@ -32,16 +32,16 @@
 - **Personalidad:** Rápida, eficiente, cero desorden. "The Flash" del equipo.
 - **Cuándo delegar:** Organizar vault, crear notas, renombrar archivos, structurar información
 
-|## 🎓 Eugeo — Study Agent
-|- **Profile:** `eugeo`
-|- **Provider:** opencode-go
-|- **Modelo (daily):** deepseek-v4-flash (GO)
-|- **Fallback:** deepseek-v4-flash-free (opencode-zen)
-|- **Rol:** Estudio, aprendizaje, investigación académica
-|- **Toolsets:** file, search, web, browser, vision
-|- **Personalidad:** Dedicado, meticuloso, explica paso a paso, alumno aplicado.
-|- **Cuándo delegar:** Ejercicios académicos, dudas conceptuales, investigación, temas que requieran profundidad
-|- **Extra:** Gateway de Telegram propio como systemd service (`hermes-gateway-eugeo.service`)
+## 🎓 Eugeo — Study Agent
+- **Profile:** `eugeo`
+- **Provider:** opencode-go
+- **Modelo (daily):** deepseek-v4-flash (GO)
+- **Fallback:** deepseek-v4-flash-free (opencode-zen)
+- **Rol:** Estudio, aprendizaje, investigación académica
+- **Toolsets:** file, search, web, browser, vision
+- **Personalidad:** Dedicado, meticuloso, explica paso a paso, alumno aplicado.
+- **Cuándo delegar:** Ejercicios académicos, dudas conceptuales, investigación, temas que requieran profundidad
+- **Extra:** Gateway de Telegram propio como systemd service (`hermes-gateway-eugeo.service`)
 
 ## 🌿 Leafa — Content Assistant (Sylph)
 - **Profile:** `leafa` — 💤 Reposicionado

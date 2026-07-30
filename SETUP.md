@@ -49,10 +49,11 @@ hermes -p asuna config set model.default deepseek-v4-flash
 hermes -p asuna config set model.provider opencode-go
 hermes -p asuna config set model.base_url https://opencode.ai/zen/go/v1
 
-# Eugeo → opencode-zen / deepseek-v4-flash-free (gratis, para chat cotidiano)
-hermes -p eugeo config set model.default deepseek-v4-flash-free
-hermes -p eugeo config set model.provider opencode-zen
-hermes -p eugeo config set model.base_url https://opencode.ai/zen/v1
+# Eugeo → opencode-go / deepseek-v4-flash (con fallback ZEN)
+hermes -p eugeo config set model.default deepseek-v4-flash
+hermes -p eugeo config set model.provider opencode-go
+hermes -p eugeo config set model.base_url https://opencode.ai/zen/go/v1
+hermes -p eugeo config set fallback_providers '["opencode-zen"]'
 
 # 5. Verificar
 hermes profile list
